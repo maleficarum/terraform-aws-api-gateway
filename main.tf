@@ -19,6 +19,9 @@ resource "aws_api_gateway_method" "proxy" {
   http_method   = "ANY"
   authorization = "NONE"
   api_key_required = false
+  request_parameters = {
+    "method.request.path.proxy" = true
+  }
 }
 
 resource "aws_api_gateway_integration" "integration" {
@@ -44,10 +47,9 @@ resource "aws_api_gateway_deployment" "deployment" {
   ]
 
   rest_api_id = aws_api_gateway_rest_api.api.id
-  stage_name = var.environment
 }
 
-resource "aws_api_gateway_stage" "example" {
+resource "aws_api_gateway_stage" "stage" {
   deployment_id = aws_api_gateway_deployment.deployment.id
   rest_api_id   = aws_api_gateway_rest_api.api.id
   stage_name    = var.environment
